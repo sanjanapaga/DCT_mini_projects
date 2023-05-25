@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+          const{useState,useEffect}=React
+
+          function TaskList(props){
+            const[task,setTask]=useState([])
+            const url="https://jsonplaceholder.typicode.com/todos?userId=1"
+
+            useEffect(()=>{
+                axios.get(url)
+                .then((response)=>{
+                    const result=response.data
+                    setTask(result)
+                })
+              
+            },[])
+            const completedTask=task.filter((ele)=>{
+                return ele.completed
+            })
+           
+            return (
+                <div>
+                    <h2>Listing task</h2>
+                    <ul>
+                    {task.map((ele)=>{
+                        return <li keys={ele.id}>{ele.title}</li>
+                    })}
+                    </ul>
+                     {completedTask?<span style={{textDecoration:'line-through'}}> 
+                                                {completedTask.title}</span>
+                                            : 
+                                            <span>{task.title}</span>}
+                </div>
+            )
+          }
+
+            ReactDOM.render(<TaskList />,rootHandle)
+        </script>
+    </body>
+</html>

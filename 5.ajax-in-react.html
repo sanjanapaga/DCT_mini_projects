@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+          const{useState,useEffect}=React
+
+          function Countries(props){
+            const[countries,setCountries]=useState([])
+            const url="https://restcountries.com/v2/all?fields=name,capital"
+
+            useEffect(()=>{
+                const xhr=new XMLHttpRequest
+                xhr.open("GET",url)
+                xhr.send()
+                xhr.onload=function(){
+                    const result=JSON.parse(xhr.responseText)
+                    setCountries(result)
+                } 
+            },[])
+
+           
+            return (
+                <div>
+                    <h2>Listing countries-{countries.length}</h2>
+                    <ul>
+                    {countries.map((ele,i)=>{
+                        return <li keys={i}>{ele.name}-{ele.capital}</li>
+                    })}
+                    </ul>
+                    
+                </div>
+            )
+          }
+
+            ReactDOM.render(<Countries />,rootHandle)
+        </script>
+    </body>
+</html>

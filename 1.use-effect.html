@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+          const{useEffect}=React
+
+          function Sample(props){
+            useEffect(()=>{
+                // alert("render")
+                document.title="sample document"
+            })
+            return (
+                <div>
+                    <h1>sample program</h1>
+                    </div>
+            )
+          }
+
+            ReactDOM.render(<Sample />,rootHandle)
+        </script>
+    </body>
+</html>

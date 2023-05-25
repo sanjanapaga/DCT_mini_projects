@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+          const{useState,useEffect}=React
+
+          function Dashboard(props){
+            const[user,setUser]=useState("")
+            const[todo,setTodo]=useState("")
+            const[post,setPost]=useState("")
+            const url1="https://jsonplaceholder.typicode.com/users"
+            const url2="https://jsonplaceholder.typicode.com/todos?userId/id"
+            const url3="https://jsonplaceholder.typicode.com/posts"
+
+            useEffect(()=>{
+                axios.get(url1)
+                .then((response)=>{
+                    const result=response.data
+                    setUser(result)
+                })
+              
+            },[])
+        
+            useEffect(()=>{
+                axios.get(url3)
+                .then((response)=>{
+                    const result=response.data
+                    setPost(result)
+                })
+              
+            },[])
+            useEffect(()=>{
+                axios.get(url2)
+                .then((response)=>{
+                    const result=response.data
+                    setTodo(result)
+                })
+              
+            },[])
+
+           
+            return (
+                <div>
+                    <h1>Dashboard</h1>
+                    <hr/>
+                    <h2>Users-{user.length}</h2>
+                    <h2>Posts-{post.length}</h2>
+                    <h2>todos-{todo.length}</h2>
+                   
+                    
+                </div>
+            )
+          }
+
+            ReactDOM.render(<Dashboard />,rootHandle)
+        </script>
+    </body>
+</html>

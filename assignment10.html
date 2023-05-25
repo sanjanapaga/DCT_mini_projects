@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Neighbouring Countries
+        </title>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+        const rootHandle=document.getElementById('root')
+        const {useState,useEffect}=React
+        const DisplayNeighbourCountries=(props)=>{
+            const {NeighbourCountries}=props 
+            const [NeighbourData,setNeighbourData]=useState([])
+           // console.log('Details', NeighbourCountries.join(','))
+            const codes=NeighbourCountries.join(',')
+            useEffect(()=>{
+                axios.get(`https://restcountries.com/v2/alpha?codes=${codes}`)
+                .then((response)=>{
+                    const data=response.data
+                    setNeighbourData(data)
+                })
+                .catch((err)=>{
+                    console.log(err.message)
+                })
+            },[codes])
+                return(
+                    <div>
+                        <h2>Neighbouring Countries</h2>
+                        <table border='1'>
+                            <thead>
+                                <tr>
+                                    <th>Flag</th>    
+                                    <th>Name</th>
+                                    <th>Capital</th>
+                                </tr>    
+                            </thead>
+                            <tbody>
+                                {NeighbourData.map((ele,i)=>{
+                                    return(
+                                        <tr key={i}>
+                                            <td><img src={ele.flags.svg} height='30' width='50' alt={ele.name}/></td>    
+                                            <td>{ele.name && ele.name}</td>
+                                            <td>{ele.capital}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table> 
+                    </div>
+                )
+            }
+
+            const DisplayError=()=>{
+                return(
+                    <h2>No Neighbouring countries</h2>
+                )
+            }
+
+            function App(props){
+                const [countryList,setCountryList]=useState([])
+                const [country,setCountry]=useState([])
+                const [NeighbourCountries,setNeighbourCountries]=useState([])
+
+                useEffect(()=>{
+                    axios.get('https://restcountries.com/v2/all?fields=name,borders')
+                        .then((response)=>{
+                            console.log(response.data)
+                            const countryList=response.data
+                            setCountryList(countryList)
+                        })
+                        .catch((err)=>{
+                            console.log(err.message)
+                        })
+                },[])
+
+                const UserChange=(e)=>{
+                    const inputCountryName=e.target.value
+                    setCountry(inputCountryName)
+
+                    const country=countryList.filter(country=>country.name==e.target.value)
+                    const border=[]
+                    country.map((ele)=>{
+                        setNeighbourCountries(ele.borders)
+                    })
+                     
+                }
+
+                return(
+                    <div>
+                        <h2>Select Country</h2>
+                        <select value={country} onChange={UserChange}>
+                            <option value="">Select Country</option>
+                            {countryList.map((ele,i)=>{
+                                return <option value={ele.name} key={i}>{ele.name}</option>
+                            })}
+                        </select><br/>
+                        {Object.keys(country).length > 0 && 
+                            (!NeighbourCountries ? <h2>No Neighbouring Countries</h2> :
+                                (<DisplayNeighbourCountries NeighbourCountries={NeighbourCountries} />))
+                            }
+                    </div>
+                )
+            }
+            ReactDOM.render(<App/>,rootHandle)
+        </script>
+    </body>
+</html>

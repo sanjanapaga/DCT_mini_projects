@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Find City
+        </title>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const {useState,useEffect}=React
+            function App(props){
+                const [lat,setLat]=useState('')
+                const [lon,setLon]=useState('')
+                const [city,setCity]=useState('')
+                const [disp_name,setDispName]=useState('')
+                const [error,setError]=useState('')
+                const [img,setImg]=useState('')
+                const access_key='pk.99f2efada25816605bbcb7d6a4797576'
+
+                useEffect(()=>{
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(showPosition);
+                        } else {
+                            setError('Geolocation is not supported by this browser')
+                        }
+                },[])
+
+                function showPosition(position) {
+                    setLat(position.coords.latitude)
+                    setLon(position.coords.longitude)
+                }
+
+                const handleSubmit=(e)=>{
+                    e.preventDefault()
+                    const cityUrl=`https://us1.locationiq.com/v1/reverse?key=${access_key}&lat=${lat}&lon=${lon}&format=json`
+                    const mapUrl=`https://maps.locationiq.com/v3/staticmap?key=${access_key}&center=${lat},${lon}&zoom=<zoom>&size=<width>x<height>&format=<format>&maptype=<MapType>&markers=icon:<icon>|${lat},${lon}&markers=icon:<icon>|${lat},${lon}`
+
+                    setImg(mapUrl)
+                    axios.get(cityUrl)
+                        .then((response)=>{
+                            const city=response.data.address.city
+                            setCity(city)
+                            setDispName(response.data.display_name)
+                        })
+                        .catch((err)=>{
+                            console.log(err.message)
+                        })
+                }
+                return(
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <h1>Geo Location</h1>    
+                            <hr/>
+                            <h2>Latitude - {lat}</h2>
+                            <h2>Longitude - {lon}</h2>
+                            <input type="submit" value='Get Location'/>                        
+                        </form>
+                        {console.log(img)}
+                        {city && 
+                            <div>
+                                <h2>City - {city}</h2>
+                                <img src={img} alt={disp_name} height='400' width='500'/>
+                                </div>
+                            
+                        }
+                    </div>
+                )
+            }
+            ReactDOM.render(<App/>,rootHandle)
+        </script>
+    </body>
+</html>
+
+

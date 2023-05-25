@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+            const{useState}=React
+
+            const Form =(props)=>{
+                const[id,setId]=useState('')
+                const{getUser,getError}=props
+
+                const handleChange=(e)=>{
+                    setId(e.target.value)
+                }
+                
+                const handleSubmit=(e)=>{
+                    e.preventDefault()
+                    console.log(id)
+                    axios.get(`https://jsonplaceholder.typicode.com/users/${id}`)
+                    .then((response)=>{
+                        getUser(response.data)
+                        getError('')
+                    })
+                    .catch((err)=>{
+                        getError(err.message)
+                        getUser({})
+                    }
+                        
+                    )
+                }
+                return(
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <input  
+                             type="text"
+                             placeholder="search by id"
+                             value={id}
+                             onChange={handleChange}/>
+                             <input type="submit"
+                              value="search"/>
+                         </form>
+                    </div>
+                )
+            }
+            const Display=(props)=>{
+                const{name,email,city}=props
+                return(
+                    <div>
+                        <h1>{name}-{email}-{city}</h1>
+                    </div>
+                )
+            }
+            const DisplayError=(props)=>{
+                const {msg}=props
+                return <p>{msg}</p>
+
+            }
+            function App(props){
+                const[user,setUser]=useState({})
+                const[error,setError]=useState("")
+
+                const getUser=(data)=>{
+                    setUser(data)
+                }
+                const getError=(msg)=>{
+                    setError(msg)
+                }
+                return (
+                    <div>
+                        <Form getUser={getUser} getError={getError}/>
+                        {Object.keys(user).length>0 && <Display name={user.name} 
+                        email={user.email} city={user.address.city}/>}
+                        {error && <DisplayError msg={error} />}
+                    </div>
+                )
+            }
+
+    
+            ReactDOM.render(<App />,rootHandle)
+        </script>
+    </body>
+</html>

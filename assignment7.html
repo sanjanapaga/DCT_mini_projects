@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>
+            
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            const url= "https://jsonplaceholder.typicode.com/users"
+            const{useState,useEffect} = React
+
+            
+            function UserInfo(props){
+                const[users,setUsers] = useState([])
+                const[id,setId] = useState("")
+                const[task,setTask] = useState([])
+
+                useEffect(()=>{
+                    axios.get(url)
+                    .then((response)=>{
+                        setUsers(response.data)
+                    })
+                },[])
+
+                const handleselect = (e) => {
+                    setId(e.target.value)
+                }
+
+                useEffect(()=>{
+                    axios.get(`https://jsonplaceholder.typicode.com/todos?userId=${id}`)
+                    .then((response)=>{
+                        setTask(response.data)
+                    })
+                },[id])
+              
+               
+                return(
+                    <div>
+                       <form >
+                        <label>Users</label> : 
+                        <select value={id} onChange={handleselect} >
+                            <option value="">select users</option>
+                             {
+                                users.map((ele)=>{
+                                    return <option key={ele.id} value={ele.id}>{ele.name}</option>
+
+
+                                })
+                             }
+                            
+                            </select>
+                        
+                        </form>
+                        <ul>
+                           {
+                             task.map((ele) =>{
+                                return <li key={ele.id}>{ele.completed ? 
+                                            <span style={{textDecoration:"line-through"}}>{ele.title}</span> : <span>{ele.title}</span> }</li>
+                             })
+                           }    
+                        </ul>
+                      
+                      
+                    </div>
+                )
+            }
+            ReactDOM.render(<UserInfo />,rootHandle)
+        </script>
+    </body>
+</html> 

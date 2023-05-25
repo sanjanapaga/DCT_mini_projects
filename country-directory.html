@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+         <title>Display directory of the countries</title>
+    </head>
+   
+    <body> 
+
+         <div id="div"></div>
+         <h1 id="head"></h1>
+         <ul id="list"></ul>
+    
+        <script>
+          const divHandle = document.getElementById('div')   
+          const ulHandle = document.getElementById('list')
+          const h1Handle = document.getElementById('head')
+          window.onload = function() {
+            const alpha ='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            alpha.split('').forEach((ele) => {
+            const aTag = document.createElement('a')
+            aTag.setAttribute('href','#')  // doubt  
+            aTag.textContent = ele 
+            divHandle.appendChild(aTag)
+            //console.log(aTag)     
+            aTag.addEventListener('click', function(char)
+            {
+                ulHandle.textContent = ' '
+                const selectedEle = char.target.textContent //IMPP 
+                console.log(selectedEle)
+
+                const xhr = new XMLHttpRequest()
+                xhr.open('GET', 'https://restcountries.com/v2/all?fields=name,capital')
+                xhr.send() 
+                xhr.onload = function(){
+                    const data = JSON.parse(xhr.responseText)
+                    const result = data.filter((ele) => {
+                        if(selectedEle === ele.name.charAt(0))
+                        {
+                            const liTag = document.createElement('li')
+                            liTag.textContent = ele.name
+                            ulHandle.appendChild(liTag)
+                            return ele.name
+                        }
+                       
+                })
+                h1Handle.textContent = `Listing ${result.length} countries`
+
+               
+          
+
+                }
+
+                
+          
+            })
+              
+           })
+          }
+           
+        
+           
+
+       
+    </script>
+    </body>
+</html>

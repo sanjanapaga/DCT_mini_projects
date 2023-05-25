@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            const url="https://jsonplaceholder.typicode.com/users"
+            const{useState,useEffect}=React
+
+            
+            function UserInfo(props){
+                const[users,setUsers]=useState([])
+                const[name,setName]=useState("")
+           
+                useEffect(()=>{
+                axios.get(url)
+                .then((response)=>{
+                    const result=response.data
+                    setUsers(result)
+                },[])
+              
+            })
+            const handleselect=(e)=>{
+                setName(e.target.value)
+                // console.log(e.target.value)
+            }
+
+            const displayInfo = () => {
+                const user = users.find(ele => ele.name == name )
+                return `${user.name} - ${user.email}-${user.address.city}`
+            }
+                return(
+                    <div>
+                       <form>
+                        <label>users</label>
+                        <select value={name} onChange={handleselect}>
+                            <option value="">select user</option>
+                                {users.map((ele,i)=>{
+                                    return <option value={ele.name} key={i}>{ele.name}</option>
+                                   })}        
+                        </select>
+                        
+                        </form>
+                        
+                        { name ? displayInfo():"select any user"}
+                    </div>
+                )
+            }
+            ReactDOM.render(<UserInfo />,rootHandle)
+        </script>
+    </body>
+</html>

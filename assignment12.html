@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+            const{useState,useEffect}=React
+         
+            const App=(props)=>{
+                const colorList=["red","blue","green","yellow","pink"]
+                const[color,setColor]=useState("")
+
+                function handleChange(e){
+                    setColor(e.target.value)
+                }
+
+                useEffect(()=>{
+                    const bodyHandle=document.querySelector("body")
+                    bodyHandle.style.backgroundColor=color
+                },[color])
+                
+                return (
+                    <form>
+                        <select value={color} onChange={handleChange}>
+                            <option value=" ">select color</option>
+                                {colorList.map((ele,i)=>{
+                                    return <option value={ele} key={i}>{ele}</option>
+                                })} 
+                        </select>
+                    
+                    </form>
+                   
+                )
+            }       
+
+          
+            ReactDOM.render(<App />,rootHandle)
+        </script>
+    </body>
+</html>

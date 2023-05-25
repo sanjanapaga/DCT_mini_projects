@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            const url=" https://jsonplaceholder.typicode.com/users"
+            const{useState,useEffect}=React
+           
+            function UserTable(props){
+                const[users,setUsers]=useState([])
+                const[select,setSelect]=useState("")
+                
+
+                useEffect(()=>{
+                axios.get(url)
+                .then((response)=>{
+                    const result=response.data
+                    setUsers(result)
+                },[])
+              
+            })
+            const handleselect=(e)=>{
+                setSelect(e.target.value)
+               
+            }
+                return(
+                    <div>
+                       <form>
+                        <label>users</label>
+                        <select value={select} onChange={handleselect}>
+                            <option value="">select user</option>
+                                {users.map((ele,i)=>{
+                                    return <option value={ele.name} key={i}>{ele.name}</option>
+                                   
+                                })}
+                            
+                        </select>
+                        </form>
+                              
+                        
+                    </div>
+                )
+            }
+            ReactDOM.render(<UserTable />,rootHandle)
+        </script>
+    </body>
+</html>

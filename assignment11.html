@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+            const{useState,useEffect}=React
+            const Form=(props)=>{
+                const[title,setTitle]=useState(localStorage.getItem("title")||"")
+                const[body,setBody]=useState(localStorage.getItem("body")||"")
+                const handleChange=(e)=>{
+                    const attr=e.target.name
+                    if(attr=="title"){
+                        setTitle(e.target.value)
+                    }
+                    else if(attr=="body"){
+                        setBody(e.target.value)
+                    }
+                }
+                useEffect(()=>{
+                    localStorage.setItem("title",title)
+                },[title])
+
+                useEffect(()=>{
+                    localStorage.setItem("body",body)
+                },[body])
+
+                const handleSubmit=(e)=>{
+                    e.preventDefault()
+                    setTitle("")
+                    setBody("")
+                }
+                return (
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <label htmlFor="title">Title</label>
+                            <input type="text" value={title} 
+                            onChange={handleChange}
+                            name="title"/><br/><br/>
+                            
+                            <label htmlFor="body">Body</label>
+                            <textarea value={body} 
+                            onChange={handleChange}
+                            name="body"></textarea><br/>
+                            <input type="submit" value="save"/>
+                        </form>
+                        <button onClick={()=>{
+                            window.location.reload()
+                        }}>reload</button>
+                    </div>
+                )
+            }
+            const App=(props)=>{
+                return (
+                    <div>
+                        <Form />
+                    </div>
+                )
+            }
+                
+            ReactDOM.render(<App />,rootHandle)
+        </script>
+    </body>
+</html>

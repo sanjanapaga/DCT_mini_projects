@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+
+const {useState,useEffect}=React
+
+const Currency=(props)=>{
+    
+    const [inr,setInr]=useState("")
+    const [usd,setUsd]=useState("")
+    const [value,setValue]=useState("")
+
+    const handleChange=(e)=>{
+        const result=e.target.value
+        setUsd(result)
+    }
+
+    useEffect(()=>{
+        axios.get(`https://api.apilayer.com/exchangerates_data/latest?symbols=INR&base=USD`,{headers:{"apikey":"QVfF6Q4pPoqDXCHKM7pJNp7GOynJ1RKS"}})
+            .then((res)=> {
+             setInr(res.data.rates.INR)
+            })
+            .catch((err)=>{
+                console.log(err.meassage)
+            })
+            
+    },[usd])
+
+    useEffect(()=>{
+        const value=(Number(inr)*Number(usd)).toFixed(2)
+        setValue(value)
+    },[usd,inr]) 
+    return(
+        <div>
+            <form>
+            <h1>usd-{usd}</h1>
+            {usd && 
+                <h1>inr-{value}</h1>
+            }     
+            <label>usd</label><input type="range" min="0" max="100" onChange={handleChange}/>
+            <p>Note-1 usd={value}INR</p>
+            </form>
+        </div>
+    )
+}
+
+const App=(props)=>{
+    return(
+        <div>
+            <Currency/>
+        </div>
+    )
+}
+
+const ele=<App/>
+
+ReactDOM.render(ele,rootHandle)
+</script>
+</body>
+</html>

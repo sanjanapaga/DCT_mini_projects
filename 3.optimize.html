@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+          const{useState,useEffect}=React
+
+          function Gender(props){
+            const[maleCount,setMaleCount]=useState(0)
+            const[femaleCount,setFemaleCount]=useState(0)
+
+            useEffect(()=>{
+                alert("Male count increased")
+            },[maleCount])
+            useEffect(()=>{
+                alert("feMale count increased")
+            },[femaleCount])
+
+            const incrementMale=()=>{
+                setMaleCount(maleCount+1)
+            }
+            const incrementFemale=()=>{
+                setFemaleCount(femaleCount+1)
+            }
+            return(
+                <div>
+                    <h2>male-{maleCount},female-{femaleCount}</h2>
+                    <button onClick={incrementMale}>male +1</button>
+                    <button onClick={incrementFemale}>female +1</button>
+
+                </div>
+            )
+          }
+
+            ReactDOM.render(<Gender />,rootHandle)
+        </script>
+    </body>
+</html>

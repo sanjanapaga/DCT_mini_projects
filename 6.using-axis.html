@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            use effect hook
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+        <script src="../js/react.development.js"></script>
+        <script src="../js/react-dom.development.js"></script>
+        <script src="../js/babel.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+        <script type="text/babel">
+            const rootHandle=document.getElementById("root")
+            
+          const{useState,useEffect}=React
+
+          function Countries(props){
+            const[countries,setCountries]=useState([])
+            const url="https://restcountries.com/v2/all?fields=name,capital"
+
+            useEffect(()=>{
+                axios.get(url)
+                .then((response)=>{
+                    const result=response.data
+                    setCountries(result)
+                }) 
+            },[])
+
+           
+            return (
+                <div>
+                    <h2>Listing countries-{countries.length}</h2>
+                    <ul>
+                    {countries.map((ele,i)=>{
+                        return <li keys={i}>{ele.name}-{ele.capital}</li>
+                    })}
+                    </ul>
+                    
+                </div>
+            )
+          }
+
+            ReactDOM.render(<Countries />,rootHandle)
+        </script>
+    </body>
+</html>
